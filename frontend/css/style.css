@@ -1,0 +1,455 @@
+/* ================================
+   GLOBAL
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fa;
+    color: #1f2937;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.header {
+    height: 70px;
+
+    background: #111827;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 25px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    position: relative;
+    z-index: 1000;
+}
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.logo-fire {
+    font-size: 32px;
+}
+
+
+.logo h1 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.logo p {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 3px;
+}
+
+
+/* ================================
+   API STATUS
+================================ */
+
+.status-container {
+    display: flex;
+    align-items: center;
+}
+
+
+.status {
+    font-size: 14px;
+    padding: 7px 12px;
+    border-radius: 20px;
+}
+
+
+.status.online {
+    background: #064e3b;
+    color: #6ee7b7;
+}
+
+
+.status.offline {
+    background: #450a0a;
+    color: #fca5a5;
+}
+
+
+/* ================================
+   MAIN
+================================ */
+
+.main-container {
+    height: calc(100vh - 70px);
+
+    display: flex;
+}
+
+
+/* ================================
+   SIDEBAR
+================================ */
+
+.sidebar {
+    width: 330px;
+
+    background: white;
+
+    padding: 20px;
+
+    overflow-y: auto;
+
+    border-right: 1px solid #e5e7eb;
+
+    z-index: 500;
+}
+
+
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+
+.sidebar-section h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+}
+
+
+.description {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6b7280;
+}
+
+
+/* ================================
+   CARDS
+================================ */
+
+.info-card {
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    padding: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+.info-card h3 {
+    font-size: 14px;
+
+    margin-bottom: 12px;
+
+    color: #374151;
+}
+
+
+/* ================================
+   COORDINATES
+================================ */
+
+.coordinate-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 7px 0;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 13px;
+}
+
+
+.coordinate-row:last-child {
+    border-bottom: none;
+}
+
+
+.coordinate-row span:last-child {
+    font-family: monospace;
+
+    color: #2563eb;
+}
+
+
+/* ================================
+   STATISTICS
+================================ */
+
+.stat-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    font-size: 13px;
+}
+
+
+.stat-row strong {
+    font-size: 15px;
+}
+
+
+/* ================================
+   SEARCH BUTTON
+================================ */
+
+.search-button {
+    width: 100%;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #dc2626;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-bottom: 15px;
+
+    transition: background 0.2s;
+}
+
+
+.search-button:hover {
+    background: #b91c1c;
+}
+
+
+.search-button:disabled {
+    background: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+
+/* ================================
+   LOADING
+================================ */
+
+.loading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+    margin-bottom: 15px;
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+.spinner {
+    width: 18px;
+    height: 18px;
+
+    border: 3px solid #e5e7eb;
+
+    border-top: 3px solid #dc2626;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ================================
+   LEGEND
+================================ */
+
+.legend-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 8px 0;
+
+    font-size: 13px;
+}
+
+
+.legend-marker {
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+
+    flex-shrink: 0;
+}
+
+
+/* ================================
+   CLASSIFICATION LEGEND
+================================ */
+
+.fire-marker {
+    background: #ef4444;
+}
+
+
+.industrial-marker {
+    background: #7c3aed;
+}
+
+
+.agriculture-marker {
+    background: #16a34a;
+}
+
+
+.forest-marker {
+    background: #15803d;
+}
+
+
+/* ================================
+   PERSISTENCE LEGEND
+================================ */
+
+.persistence-new-marker {
+    background: #ef4444;
+}
+
+
+/* NEW = Red */
+
+
+.persistence-recent-marker {
+    background: #2563eb;
+}
+
+
+/* RECENT = Blue */
+
+
+.persistence-intermittent-marker {
+    background: #f59e0b;
+}
+
+
+/* INTERMITTENT = Orange */
+
+
+.persistence-persistent-marker {
+    background: #7c3aed;
+}
+
+
+/* PERSISTENT = Purple */
+
+
+/*
+   HISTORICAL IS INTENTIONALLY NOT INCLUDED
+   IN THE MAIN MAP LEGEND.
+
+   Historical data will be handled through
+   a separate historical-analysis feature.
+*/
+
+
+.legend-card hr {
+    border: none;
+
+    border-top: 1px solid #e5e7eb;
+
+    margin: 12px 0;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 260px;
+    }
+
+    .logo h1 {
+        font-size: 16px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .main-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: 300px;
+    }
+
+    .map-container {
+        height: calc(100vh - 370px);
+    }
+
+}

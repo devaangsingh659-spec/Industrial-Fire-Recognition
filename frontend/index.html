@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Industrial Fire Detection</title>
+
+
+    <!-- ================= LEAFLET CSS ================= -->
+
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+
+    <!-- ================= OUR CSS ================= -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/map.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/popup.css"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="header">
+
+        <div class="logo">
+
+            <span class="logo-fire">🔥</span>
+
+            <div>
+
+                <h1>
+                    Industrial Fire Detection
+                </h1>
+
+                <p>
+                    Satellite-based Fire Monitoring System
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- API STATUS -->
+
+        <div class="status-container">
+
+            <span
+                id="apiStatus"
+                class="status offline"
+            >
+                ● API Offline
+            </span>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =========================================================
+         MAIN CONTAINER
+    ========================================================== -->
+
+    <main class="main-container">
+
+
+        <!-- =====================================================
+             LEFT SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+
+            <!-- ================= MONITORING ================= -->
+
+            <div class="sidebar-section">
+
+                <h2>
+                    Fire Monitoring
+                </h2>
+
+                <p class="description">
+
+                    Move or zoom the map to search for
+                    today's active satellite fire detections
+                    within the visible area.
+
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CURRENT SEARCH AREA
+            ================================================== -->
+
+            <div class="info-card">
+
+                <h3>
+                    Current Search Area
+                </h3>
+
+
+                <div class="coordinate-row">
+
+                    <span>
+                        West
+                    </span>
+
+                    <span id="west">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="coordinate-row">
+
+                    <span>
+                        South
+                    </span>
+
+                    <span id="south">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="coordinate-row">
+
+                    <span>
+                        East
+                    </span>
+
+                    <span id="east">
+                        -
+                    </span>
+
+                </div>
+
+
+                <div class="coordinate-row">
+
+                    <span>
+                        North
+                    </span>
+
+                    <span id="north">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DETECTION STATISTICS
+            ================================================== -->
+
+            <div class="info-card">
+
+                <h3>
+                    Today's Detection Statistics
+                </h3>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Total Detections
+                    </span>
+
+                    <strong id="detectionCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Industrial
+                    </span>
+
+                    <strong id="industrialCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Agricultural
+                    </span>
+
+                    <strong id="agricultureCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Forest
+                    </span>
+
+                    <strong id="forestCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PERSISTENCE STATISTICS
+            ================================================== -->
+
+            <div class="info-card">
+
+                <h3>
+                    Persistence Analysis
+                </h3>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Persistent
+                    </span>
+
+                    <strong id="persistentCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Intermittent
+                    </span>
+
+                    <strong id="intermittentCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        Recent
+                    </span>
+
+                    <strong id="recentCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-row">
+
+                    <span>
+                        New Detections
+                    </span>
+
+                    <strong id="newCount">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SEARCH BUTTON
+            ================================================== -->
+
+            <button
+                id="searchButton"
+                class="search-button"
+            >
+
+                Search Fires
+
+            </button>
+
+
+
+            <!-- =================================================
+                 LOADING
+            ================================================== -->
+
+            <div
+                id="loadingMessage"
+                class="loading hidden"
+            >
+
+                <div class="spinner"></div>
+
+                <span>
+                    Searching satellite data...
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 MAP LEGEND
+            ================================================== -->
+
+            <div class="info-card legend-card">
+
+                <h3>
+                    Map Legend
+                </h3>
+
+
+                <!-- ================= CLASSIFICATION ============== -->
+
+
+                <!-- FIRE -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker fire-marker"
+                    ></span>
+
+                    <span>
+                        Fire Detection
+                    </span>
+
+                </div>
+
+
+                <!-- INDUSTRIAL -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker industrial-marker"
+                    ></span>
+
+                    <span>
+                        Industrial
+                    </span>
+
+                </div>
+
+
+                <!-- AGRICULTURAL -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker agriculture-marker"
+                    ></span>
+
+                    <span>
+                        Agricultural
+                    </span>
+
+                </div>
+
+
+                <!-- FOREST -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker forest-marker"
+                    ></span>
+
+                    <span>
+                        Forest
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSISTENCE LEGEND
+                ================================================== -->
+
+                <hr>
+
+
+                <!-- NEW -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker persistence-new-marker"
+                    ></span>
+
+                    <span>
+                        New
+                    </span>
+
+                </div>
+
+
+                <!-- RECENT -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker persistence-recent-marker"
+                    ></span>
+
+                    <span>
+                        Recent
+                    </span>
+
+                </div>
+
+
+                <!-- INTERMITTENT -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker persistence-intermittent-marker"
+                    ></span>
+
+                    <span>
+                        Intermittent
+                    </span>
+
+                </div>
+
+
+                <!-- PERSISTENT -->
+
+                <div class="legend-item">
+
+                    <span
+                        class="legend-marker persistence-persistent-marker"
+                    ></span>
+
+                    <span>
+                        Persistent
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+
+
+        <!-- =====================================================
+             MAP
+        ====================================================== -->
+
+        <section class="map-container">
+
+
+            <div id="map"></div>
+
+
+            <!-- MAP MESSAGE -->
+
+            <div
+                id="mapMessage"
+                class="map-message"
+            >
+
+                Move or zoom the map to search this area.
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =========================================================
+         LEAFLET JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+
+    <!-- =========================================================
+         OUR JAVASCRIPT
+    ========================================================== -->
+
+    <script src="js/api.js"></script>
+
+    <script src="js/markers.js"></script>
+
+    <script src="js/ui.js"></script>
+
+    <script src="js/map.js"></script>
+
+    <script src="js/app.js"></script>
+
+
+</body>
+
+</html>
