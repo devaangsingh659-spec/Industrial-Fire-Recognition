@@ -253,6 +253,76 @@
 
 
             <!-- =================================================
+                 CLASS PROBABILITY PIE CHART
+            ================================================== -->
+
+            <div class="info-card chart-card">
+
+                <div class="card-header-row">
+
+                    <h3>
+                        Class Probabilities & Distribution
+                    </h3>
+
+                    <span id="chartModeBadge" class="chart-badge">
+                        Live Area
+                    </span>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="classProbabilityChart"></canvas>
+
+                    <div id="chartEmptyState" class="chart-empty-state">
+                        <div class="chart-empty-icon">📊</div>
+                        <span>Search an area to view class probability distribution</span>
+                    </div>
+
+                </div>
+
+                <div class="probability-summary">
+
+                    <div class="prob-pill ind-pill">
+                        <div class="prob-pill-header">
+                            <span class="pill-dot ind-dot"></span>
+                            <span class="pill-title">Industrial</span>
+                        </div>
+                        <div class="prob-pill-data">
+                            <span id="indProbVal" class="pill-pct">0.0%</span>
+                            <span id="indCountBadge" class="pill-count">(0)</span>
+                        </div>
+                    </div>
+
+                    <div class="prob-pill agr-pill">
+                        <div class="prob-pill-header">
+                            <span class="pill-dot agr-dot"></span>
+                            <span class="pill-title">Agricultural</span>
+                        </div>
+                        <div class="prob-pill-data">
+                            <span id="agrProbVal" class="pill-pct">0.0%</span>
+                            <span id="agrCountBadge" class="pill-count">(0)</span>
+                        </div>
+                    </div>
+
+                    <div class="prob-pill for-pill">
+                        <div class="prob-pill-header">
+                            <span class="pill-dot for-dot"></span>
+                            <span class="pill-title">Forest</span>
+                        </div>
+                        <div class="prob-pill-data">
+                            <span id="forProbVal" class="pill-pct">0.0%</span>
+                            <span id="forCountBadge" class="pill-count">(0)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
                  PERSISTENCE STATISTICS
             ================================================== -->
 
@@ -534,6 +604,16 @@
 
     <script
         src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+
+    <!-- =========================================================
+         CHART.JS FOR CLASS PROBABILITIES
+    ========================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js">
     </script>
 
 

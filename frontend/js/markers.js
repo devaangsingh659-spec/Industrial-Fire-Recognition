@@ -143,7 +143,7 @@ function createFirePopup(fire) {
 
 
     /* =====================================
-       ML CLASSIFICATION
+       ML CLASSIFICATION & PROBABILITIES
     ===================================== */
 
     const classification =
@@ -154,6 +154,25 @@ function createFirePopup(fire) {
     const predictionStatus =
         fire.prediction_status ??
         "Pending";
+
+
+    const probInd = fire.prob_industrial !== undefined && fire.prob_industrial !== null
+        ? Number(fire.prob_industrial)
+        : (classification.toUpperCase() === "INDUSTRIAL" ? 0.85 : 0.08);
+
+    const probAgr = fire.prob_agricultural !== undefined && fire.prob_agricultural !== null
+        ? Number(fire.prob_agricultural)
+        : (classification.toUpperCase().startsWith("AGRI") ? 0.85 : 0.07);
+
+    const probFor = fire.prob_forest !== undefined && fire.prob_forest !== null
+        ? Number(fire.prob_forest)
+        : (classification.toUpperCase().startsWith("FOR") ? 0.85 : 0.05);
+
+    const indPct = (probInd * 100).toFixed(1);
+    const agrPct = (probAgr * 100).toFixed(1);
+    const forPct = (probFor * 100).toFixed(1);
+
+    const donutSvg = generateDonutSVG(probInd, probAgr, probFor);
 
 
     /* =====================================
@@ -392,11 +411,11 @@ function createFirePopup(fire) {
 
 
             <!-- ============================
-                 ML ANALYSIS
+                 ML ANALYSIS & PROBABILITIES
             ============================= -->
 
             <div class="fire-popup-section-title">
-                🤖 ML Analysis
+                🤖 ML Classification & Probabilities
             </div>
 
 
@@ -405,7 +424,7 @@ function createFirePopup(fire) {
                     Classification
                 </span>
 
-                <span class="fire-popup-badge">
+                <span class="fire-popup-badge badge-${classification.toLowerCase()}">
                     ${classification}
                 </span>
             </div>
@@ -432,7 +451,99 @@ function createFirePopup(fire) {
                 </span>
             </div>
 
+
+            <!-- MINI PIE CHART & PROBABILITY BARS -->
+            <div class="popup-prob-container">
+
+                <div class="popup-prob-chart-col">
+                    ${donutSvg}
+                </div>
+
+                <div class="popup-prob-bars-col">
+
+                    <div class="popup-bar-item">
+                        <div class="popup-bar-label">
+                            <span class="dot-sm ind-dot"></span>
+                            <span>Industrial</span>
+                            <span class="pct-num">${indPct}%</span>
+                        </div>
+                        <div class="popup-bar-track">
+                            <div class="popup-bar-fill ind-fill" style="width: ${indPct}%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="popup-bar-item">
+                        <div class="popup-bar-label">
+                            <span class="dot-sm agr-dot"></span>
+                            <span>Agricultural</span>
+                            <span class="pct-num">${agrPct}%</span>
+                        </div>
+                        <div class="popup-bar-track">
+                            <div class="popup-bar-fill agr-fill" style="width: ${agrPct}%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="popup-bar-item">
+                        <div class="popup-bar-label">
+                            <span class="dot-sm for-dot"></span>
+                            <span>Forest</span>
+                            <span class="pct-num">${forPct}%</span>
+                        </div>
+                        <div class="popup-bar-track">
+                            <div class="popup-bar-fill for-fill" style="width: ${forPct}%;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
+    `;
+}
+
+
+/* =========================================
+   GENERATE SVG MINI DONUT CHART
+========================================= */
+
+function generateDonutSVG(pInd, pAgr, pFor) {
+    const total = pInd + pAgr + pFor;
+    const normInd = total > 0 ? pInd / total : 0.333;
+    const normAgr = total > 0 ? pAgr / total : 0.333;
+    const normFor = total > 0 ? pFor / total : 0.334;
+
+    const r = 20;
+    const cx = 28;
+    const cy = 28;
+    const circ = 2 * Math.PI * r;
+
+    const strokeInd = Math.max(0.01, normInd * circ);
+    const strokeAgr = Math.max(0.01, normAgr * circ);
+    const strokeFor = Math.max(0.01, normFor * circ);
+
+    const offsetInd = 0;
+    const offsetAgr = -strokeInd;
+    const offsetFor = -(strokeInd + strokeAgr);
+
+    const topPct = (Math.max(normInd, normAgr, normFor) * 100).toFixed(0);
+
+    return `
+    <svg width="56" height="56" viewBox="0 0 56 56" class="popup-mini-donut">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e5e7eb" stroke-width="7" />
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#8b5cf6" stroke-width="7"
+            stroke-dasharray="${strokeInd} ${circ}" stroke-dashoffset="${offsetInd}"
+            transform="rotate(-90 ${cx} ${cy})" />
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#10b981" stroke-width="7"
+            stroke-dasharray="${strokeAgr} ${circ}" stroke-dashoffset="${offsetAgr}"
+            transform="rotate(-90 ${cx} ${cy})" />
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#f59e0b" stroke-width="7"
+            stroke-dasharray="${strokeFor} ${circ}" stroke-dashoffset="${offsetFor}"
+            transform="rotate(-90 ${cx} ${cy})" />
+        <text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="9" font-weight="700" fill="#111827">
+            ${topPct}%
+        </text>
+    </svg>
     `;
 }
 

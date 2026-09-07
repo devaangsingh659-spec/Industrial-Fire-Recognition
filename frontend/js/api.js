@@ -130,7 +130,19 @@ async function searchFires(bounds) {
 
 
             prediction_status:
-                fire.prediction_status ?? null
+                fire.prediction_status ?? null,
+
+
+            prob_industrial:
+                fire.prob_industrial !== undefined ? Number(fire.prob_industrial) : null,
+
+
+            prob_agricultural:
+                fire.prob_agricultural !== undefined ? Number(fire.prob_agricultural) : null,
+
+
+            prob_forest:
+                fire.prob_forest !== undefined ? Number(fire.prob_forest) : null
 
         };
 

@@ -40,12 +40,13 @@ class FireDetection(BaseModel):
     detection_type: Optional[str] = None
 
     # Expected values:
-    #
     #   INDUSTRIAL
     #   AGRICULTURAL
-    #   OTHER
-    #
-    # Populated by the ML pipeline.
+    #   FOREST
+
+    prob_industrial: Optional[float] = None
+    prob_agricultural: Optional[float] = None
+    prob_forest: Optional[float] = None
 
     # ------------------------------------------------------
     # ML PREDICTION STATUS
@@ -54,7 +55,6 @@ class FireDetection(BaseModel):
     prediction_status: Optional[str] = None
 
     # Expected values:
-    #
     #   PENDING
     #   PROCESSING
     #   COMPLETED
@@ -67,19 +67,14 @@ class FireDetection(BaseModel):
     persistence_status: Optional[str] = None
 
     # Expected values:
-    #
     #   NEW
     #   RECENT
     #   INTERMITTENT
     #   PERSISTENT
-    #
-    # Only today's detections are returned by the main
-    # fire search endpoint.
 
     persistence_score: Optional[float] = None
 
     # Score between 0 and 1.
-    #
     # Calculated using the recent 5-day observation history.
 
     # ------------------------------------------------------
@@ -94,28 +89,13 @@ class FireDetection(BaseModel):
 
     active_days: Optional[int] = None
 
-    # These values are calculated dynamically from the
-    # recent observation history.
-
     # ------------------------------------------------------
     # EXPLANATION
     # ------------------------------------------------------
 
     persistence_reason: Optional[str] = None
 
-    # Example:
-    #
-    # NEW:
-    #   "First detected today within the last 3 hours."
-    #
-    # RECENT:
-    #   "Detected once today."
-    #
-    # INTERMITTENT:
-    #   "Detected multiple times today."
-    #
-    # PERSISTENT:
-    #   "Detected today and on previous days."
+    is_historical: Optional[bool] = False
 
 
 # ==========================================================

@@ -123,23 +123,9 @@ def search_fires(request: BoundingBoxRequest):
 
         # ======================================================
         # 6. ML classification
-        #
-        # ML will be connected here later.
-        #
-        # The ML model can produce:
-        #   - detection_type
-        #   - confidence
-        #   - prediction_status
-        #
-        # ML probabilities remain in:
-        #   probability_predictions
-        #
-        # No database alteration is required.
         # ======================================================
-
-        # Example future flow:
-        #
-        # detections = run_classification(detections)
+        from backend.services.prediction_service import classify_detections_batch
+        detections = classify_detections_batch(detections)
 
         # ======================================================
         # 7. Return response

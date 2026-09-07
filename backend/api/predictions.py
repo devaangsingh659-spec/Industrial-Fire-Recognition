@@ -1,7 +1,14 @@
+# backend/api/predictions.py
+
 from fastapi import APIRouter, HTTPException
 
+from backend.schemas.prediction import (
+    DetectionFeatures,
+    PredictionResponse
+)
 from backend.services.prediction_service import (
-    classify_detection
+    classify_detection,
+    predict_and_store_for_detection_id
 )
 
 router = APIRouter(
@@ -10,19 +17,24 @@ router = APIRouter(
 )
 
 
-@router.post("/{detection_id}")
-def predict_detection(
-    detection_id: int
-):
+@router.post("/classify", response_model=PredictionResponse)
+def classify_ad_hoc(features: DetectionFeatures):
+    """
+    Perform on-the-fly ML classification and calculate class probabilities.
+    """
+    detection_dict = features.model_dump()
+    result = classify_detection(detection_dict)
+    return result
 
-    # TODO:
-    # 1. Get detection from PostgreSQL
-    # 2. Create features
-    # 3. Run model
-    # 4. Store prediction
-    # 5. Return prediction
 
-    return {
-        "detection_id": detection_id,
-        "status": "pending"
-    }
+@router.post("/{detection_id}", response_model=PredictionResponse)
+def predict_by_id(detection_id: int):
+    """
+    Predict and update classification for a specific detection in the database.
+    """
+    result = predict_and_store_for_detection_id(detection_id)
+    if result.get("status") == "not_found":
+        raise HTTPException(status_code=404, detail=result.get("message"))
+    elif result.get("status") == "failed":
+        raise HTTPException(status_code=500, detail=result.get("error"))
+    return result
