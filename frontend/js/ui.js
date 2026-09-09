@@ -147,6 +147,10 @@ function renderClassPieChart(fires) {
         avgInd = avgInd / sumTotal;
         avgAgr = avgAgr / sumTotal;
         avgFor = avgFor / sumTotal;
+    } else {
+        avgInd = 1 / 3;
+        avgAgr = 1 / 3;
+        avgFor = 1 / 3;
     }
 
     const indPct = (avgInd * 100).toFixed(1);
@@ -219,7 +223,7 @@ function renderClassPieChart(fires) {
                             padding: 10,
                             cornerRadius: 8,
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     const label = context.label || "";
                                     const value = context.parsed || 0;
                                     return ` ${label}: ${value.toFixed(1)}% prob`;
