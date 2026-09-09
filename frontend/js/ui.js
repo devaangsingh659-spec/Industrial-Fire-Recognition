@@ -64,6 +64,7 @@ function renderClassPieChart(fires) {
     const indCountBadge = document.getElementById("indCountBadge");
     const agrCountBadge = document.getElementById("agrCountBadge");
     const forCountBadge = document.getElementById("forCountBadge");
+    const chartModeBadge = document.getElementById("chartModeBadge");
 
     if (!fires || fires.length === 0) {
 
@@ -86,6 +87,7 @@ function renderClassPieChart(fires) {
         if (indCountBadge) indCountBadge.textContent = "(0)";
         if (agrCountBadge) agrCountBadge.textContent = "(0)";
         if (forCountBadge) forCountBadge.textContent = "(0)";
+        if (chartModeBadge) chartModeBadge.textContent = "Live Area";
 
         return;
     }
@@ -426,6 +428,13 @@ function updateClassificationCounts(fires) {
     // ========================================================
     // UPDATE CLASS PROBABILITY PIE CHART
     // ========================================================
+
+    const chartModeBadge =
+        document.getElementById("chartModeBadge");
+
+    if (chartModeBadge) {
+        chartModeBadge.textContent = "Live Area";
+    }
 
     renderClassPieChart(fires);
 

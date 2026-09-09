@@ -186,10 +186,10 @@ function createFirePopup(fire) {
 
     const persistenceScore =
         fire.persistence_score !== null &&
-        fire.persistence_score !== undefined
+            fire.persistence_score !== undefined
             ? Number(
                 fire.persistence_score
-              ).toFixed(3)
+            ).toFixed(3)
             : "N/A";
 
 
@@ -601,6 +601,21 @@ function displayFires(fires) {
 
             const marker =
                 createFireMarker(fire);
+
+
+            marker.on(
+                "click",
+                function () {
+                    renderClassPieChart([fire]);
+
+                    const chartModeBadge =
+                        document.getElementById("chartModeBadge");
+
+                    if (chartModeBadge) {
+                        chartModeBadge.textContent = "Selected Point";
+                    }
+                }
+            );
 
 
             marker.addTo(map);
